@@ -1,13 +1,13 @@
 package koddas.web.war;
 
-//import java.io.Serializable;
+import java.io.Serializable;
 
 /**
  * MrBean is a simple example of a Java bean; a small class that encapsulates a
  * number of values. It exposes an empty constructor and has a number of
  * members that are accessible through getters and setters.
  * 
- * @author Johan Holmberg
+ * @author Johan Holmberg  ooooo
  */
 public class MrBean implements Serializable {
 	/**
