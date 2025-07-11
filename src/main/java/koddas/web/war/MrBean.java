@@ -7,7 +7,7 @@ import java.io.Serializable;
  * number of values. It exposes an empty constructor and has a number of
  * members that are accessible through getters and setters.
  * 
- * @author Johan Holmberg  ooooo
+ * @author Johan Holmberg
  */
 public class MrBean implements Serializable {
 	/**
