@@ -1,47 +1,35 @@
 pipeline {
     agent any
-    tools {
-        maven 'Maven363'
+
+    environment {
+        // Optionally define Maven settings or Java version
+        M2        = '/opt/maven/bin'
+        M2_HOME   = '/opt/maven'
+        PATH      = "${env.M2}:${env.PATH}"
     }
-    options {
-        timeout(10)
-        buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '5', numToKeepStr: '5')
-    }
+
     stages {
-        stage('Build') {
+        stage('Checkout from GitHub') {
             steps {
-                sh "mvn clean install"
+                echo 'Cloning repository...'
+                git url: 'https://github.com/raja12111993/war-web-project.git', branch: 'master'
             }
         }
-        stage('upload artifact to nexus') {
+
+        stage('Build with Maven') {
             steps {
-                nexusArtifactUploader artifacts: [
-                    [
-                        artifactId: 'wwp', 
-                        classifier: '', 
-                        file: 'target/wwp-1.0.0.war', 
-                        type: 'war'
-                    ]
-                ], 
-                    credentialsId: 'nexus3', 
-                    groupId: 'koddas.web.war', 
-                    nexusUrl: '10.0.0.91:8081', 
-                    nexusVersion: 'nexus3', 
-                    protocol: 'http', 
-                    repository: 'samplerepo', 
-                    version: '1.0.0'
+                echo 'Building project with Maven...'
+                sh 'mvn clean install'
             }
         }
     }
+
     post {
-        always{
-            deleteDir()
+        success {
+            echo 'Build completed successfully!'
         }
         failure {
-            echo "sendmail -s mvn build failed receipients@my.com"
-        }
-        success {
-            echo "The job is successful"
+            echo 'Build failed. Check logs.'
         }
     }
 }
